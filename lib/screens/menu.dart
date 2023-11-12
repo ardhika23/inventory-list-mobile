@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_list/widgets/left_drawer.dart';
+import 'package:inventory_list/widgets/shop_card.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key}) : super(key: key);
@@ -64,6 +66,7 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
           ),
+          drawer: const LeftDrawer(),
         );
     }
 }
