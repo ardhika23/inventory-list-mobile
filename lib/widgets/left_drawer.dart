@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_list/screens/menu.dart';
 import 'package:inventory_list/screens/shoplist_form.dart';
+import 'package:inventory_list/screens/list_product.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -17,7 +18,7 @@ class LeftDrawer extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Shopping List',
+                  'Inventory List',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
@@ -52,7 +53,7 @@ class LeftDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.add_shopping_cart),
-            title: const Text('Add Product'),
+            title: const Text('Add Item'),
             // Redirection to ShopFormPage
             onTap: () {
               // Routing to ShopFormPage here, after ShopFormPage has been created.
@@ -62,6 +63,17 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.shopping_basket),
+            title: const Text('Product List'),
+            onTap: () {
+              // Route menu to product page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProductPage()),
+        );
+    },
+),
         ],
       ),
     );

@@ -304,3 +304,536 @@ Adding a color attribute to the `ShopItem` class allows for more flexible and dy
 </details>
 
 ---
+
+<details>
+<summary>Assignment 8: Flutter Navigation, Layouts, Forms, and Input Elements</summary>
+
+## Questions and Answers
+
+### -> Explain the difference between `Navigator.push()` and `Navigator.pushReplacement()`, accompanied by examples of the correct usage of both methods!
+
+navigator.push() : This method is used when you want to move to a new screen while maintaining the current screen in the navigation stack. In other words, the previous screen is not eliminated when you navigate to the new one. It resembles adding a new page on top of the ones that already exist. Using {Navigator.push()} allows you to utilize the back button to go back to the previous screen.
+
+Example Usage of Navigator.push() : Imagine you have a product list on your app. You want to display the product details on a new screen when a user taps on one of the products. Since the user may want to return to the list of items after seeing the information, you would use `Navigator.push()` in this case.
+
+    ```
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProductDetailsScreen()),
+    );
+    ```
+
+Navigator.pushReplacement() : If you want to change to a different screen without remaining the current screen in the browser stack, you can use this technique. The new screen essentially takes the place of the old one. When you want the user to stay on the current screen but not go back, this is helpful.
+
+Example Usage of Navigator.pushReplacement() : An example of this usually happens in a login flow. A user is able to access the app's home screen after successfully logging in. Returning to the login screen once logged in is not logical, thus in this case, you would use `Navigator.pushReplacement().
+
+    ```
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+    );
+    ```
+
+In short up, if the user needs to return to the previous screen, utilize {Navigator.push()`. If you want to completely replace the current screen and keep the user from returning to it, use {Navigator.pushReplacement().
+
+---
+
+### -> Explain each layout widget in Flutter and their respective usage contexts!
+
+•	Container: This widget has a lot of flexibility. I use it anytime I have to make a box with a certain border, background color, width, or height. It works well for aligning its child widget and adding margin and padding. If you're familiar with web development, it's similar to an HTML div.
+•	Row and Column: For both horizontal (row) and vertical (column) linear layouts, row and column are the essential elements. For example, I use Rows to arrange icons on a toolbar or other widgets side by side. I can place widgets on top of each other, such as form fields in a login screen, with the help of columns. In CSS, they are comparable to flexbox.
+•	Stack: For overlaying widgets on top of one other, this widget is great. I frequently use it to create complex user interfaces (UIs) with floating buttons or to overlay text on photos.
+•	GridView: GridView is my go-to widget when I need to create a grid layout, such as a gallery or a grid of choices. It is quite helpful for showing objects in a structured format because it automatically puts its child widgets into a grid.
+•	ListView: For creating scrolling lists, this is ideal. For stuff like chat interfaces, to-do lists, or settings menus, I use it all the time. It works well with extensive lists of items and can handle lists that are both vertical and horizontal.
+•	Padding and Allign: I use padding to add space around a widget, and align works well for lining up a child widget inside of its parent. They are straightforward but quite helpful for adjusting the setup.
+•	Flex and Expanded: Expanded widgets within Rows and Columns split the free space among their children. Flex is used to create flexible layouts. For example, I can make a button expand to fill the screen's width by using Expanded to make a widget occupy all available space.
+•	Wrap: This is a useful but unfamiliar widget. It immediately wraps its progeny to the next line when they take up more space than is available. It works really well for making a set of buttons that need to wrap on small screens, or for making a tag system.
+•	SizedBox: SizedBox is an ideal solution for me anytime I need to specify an exact size for a widget or create space between them. It can be used to make spaces in a layout, much like a spacer.
+
+---
+
+### -> List the form input elements you used in this assignment and explain why you used these input elements!
+
+
+---
+
+### -> How is clean architecture implemented in a Flutter application?
+
+Coding a Flutter application with a clean, modular, and easily maintainable code structure is known as clean architecture. I'd handle it by separating the code into three layers which are: (1). Presentation Layer/UI, in the `presentation` folder, I design my Flutter widgets. These are responsible for displaying the user interface. I try to keep them simple, handling only UI-related tasks. (2) Domain Layer, I create the `domain` folder for the core business logic. This is where I define entities and business rules that are independent of any framework. It's the heart of the application. (3) Data Sources, I implement data sources like databases or APIs in the `application` layer. In order to maintain the independence and testability of the core business logic, repositories in this layer interface with these data sources.
+
+---
+
+### -> Explain how you implemented the checklist above step-by-step! (not just following the tutorial)
+
+1. **Create widgets and screen from Lab**
+
+    menu.dart
+
+    ``` 
+    import 'package:flutter/material.dart';
+    import 'package:inventory_list/widgets/left_drawer.dart';
+    import 'package:inventory_list/widgets/shop_card.dart';
+
+    class MyHomePage extends StatelessWidget {
+    MyHomePage({Key? key}) : super(key: key);
+
+    final List<ShopItem> items = [
+        ShopItem("View Items", Icons.checklist, Colors.green),
+        ShopItem("Add Item", Icons.add_shopping_cart, Colors.blue),
+        ShopItem("Logout", Icons.logout, Colors.red),
+    ];
+
+
+    // This widget is the home page of your application. It is stateful, meaning
+    // that it has a State object (defined below) that contains fields that affect
+    // how it looks.
+
+    // This class is the configuration for the state. It holds the values (in this
+    // case the title) provided by the parent (in this case the App widget) and
+    // used by the build method of the State. Fields in a Widget subclass are
+    // always marked "final".
+
+    @override
+        Widget build(BuildContext context) {
+            return Scaffold(
+            appBar: AppBar(
+                title: const Text(
+                'Inventory List',
+                ),
+            ),
+            drawer: const LeftDrawer(),
+            body: SingleChildScrollView(
+                // Scrolling wrapper widget
+                child: Padding(
+                padding: const EdgeInsets.all(10.0), // Set padding for the page
+                child: Column(
+                    // Widget to display children vertically
+                    children: <Widget>[
+                    const Padding(
+                        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        // Text widget to display text with center alignment and appropriate style
+                        child: Text(
+                        'PBP Shop', // Text indicating the shop name
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                        ),
+                        ),
+                    ),
+                    // Grid layout
+                    GridView.count(
+                        // Container for our cards.
+                        primary: true,
+                        padding: const EdgeInsets.all(20),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        crossAxisCount: 3,
+                        shrinkWrap: true,
+                        children: items.map((ShopItem item) {
+                        // Iteration for each item
+                        return ShopCard(item);
+                        }).toList(),
+                    ),
+                    ],
+                ),
+                ),
+            ),
+            );
+        }
+    }
+
+    ```
+
+    shoplist_form.dart
+
+    ```
+    import 'package:flutter/material.dart';
+    import 'package:inventory_list/widgets/left_drawer.dart';
+
+    class ShopFormPage extends StatefulWidget {
+        const ShopFormPage({super.key});
+
+        @override
+        State<ShopFormPage> createState() => _ShopFormPageState();
+    }
+
+    class _ShopFormPageState extends State<ShopFormPage> {
+        final _formKey = GlobalKey<FormState>();
+        String _name = "";
+        int _price = 0;
+        String _description = "";
+        int _amount = 0;
+
+        @override
+        Widget build(BuildContext context) {
+            return Scaffold(
+            appBar: AppBar(
+                title: const Center(
+                child: Text(
+                    'Add Item Form',
+                ),
+                ),
+                backgroundColor: Colors.indigo,
+                foregroundColor: Colors.white,
+            ),
+            // Adding the previously created drawer here
+            drawer: const LeftDrawer(),
+            body: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                        decoration: InputDecoration(
+                            hintText: "Product Name",
+                            labelText: "Product Name",
+                            border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            ),
+                        ),
+                        onChanged: (String? value) {
+                            setState(() {
+                            _name = value!;
+                            });
+                        },
+                        onSaved: (String? value) {
+                            setState(() {
+                            _name = value!;
+                            });
+                        },
+                        validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                            return "Name cannot be empty!";
+                            }
+                            return null;
+                        },
+                        ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                        decoration: InputDecoration(
+                            hintText: "Amount",
+                            labelText: "Amount",
+                            border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            ),
+                        ),
+                        onChanged: (String? value) {
+                            setState(() {
+                            _amount = int.tryParse(value!) ?? _amount;
+                            });
+                        },
+                        onSaved: (String? value) {
+                            setState(() {
+                            _amount = int.tryParse(value!) ?? _amount;
+                            });
+                        },
+                        validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                            return "Amount cannot be empty!";
+                            }
+                            if (int.tryParse(value) == null) {
+                            return "Amount must be a number!";
+                            }
+                            return null;
+                        },
+                        ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                        decoration: InputDecoration(
+                            hintText: "Price",
+                            labelText: "Price",
+                            border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            ),
+                        ),
+                        onChanged: (String? value) {
+                            setState(() {
+                            _price = int.tryParse(value!) ?? _price;
+                            });
+                        },
+                        onSaved: (String? value) {
+                            setState(() {
+                            _price = int.tryParse(value!) ?? _price;
+                            });
+                        },
+                        validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                            return "Price cannot be empty!";
+                            }
+                            if (int.tryParse(value) == null) {
+                            return "Price must be a number!";
+                            }
+                            return null;
+                        },
+                        ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                        decoration: InputDecoration(
+                            hintText: "Description",
+                            labelText: "Description",
+                            border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            ),
+                        ),
+                        onChanged: (String? value) {
+                            setState(() {
+                            _description = value!;
+                            });
+                        },
+                        onSaved: (String? value) {
+                            setState(() {
+                            _description = value!;
+                            });
+                        },
+                        validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                            return "Description cannot be empty!";
+                            }
+                            return null;
+                        },
+                        ),
+                    ),
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.indigo),
+                            ),
+                            onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                                showDialog(
+                                context: context,
+                                builder: (context) {
+                                    return AlertDialog(
+                                    title: const Text('Product successfully saved'),
+                                    content: SingleChildScrollView(
+                                        child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                            // Display other values here
+                                            Text('Name: $_name'),
+                                            Text('Amount: $_amount'),
+                                            Text('Price: $_price'),
+                                            Text('Description: $_description')
+                                        ],
+                                        ),
+                                    ),
+                                    actions: [
+                                        TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                            Navigator.pop(context);
+                                        },
+                                        ),
+                                    ],
+                                    );
+                                },
+                                );
+                            // Reset the form after the dialog is displayed
+                            _formKey.currentState!.reset();
+                            }
+                            },
+                            child: const Text(
+                            "Save",
+                            style: TextStyle(color: Colors.white),
+                            ),
+                        ),
+                        ),
+                    ),
+                    ]
+                ),
+                ),
+            ),
+            );
+        }
+    }
+
+    ```
+
+    left_drawer
+
+    ```
+    import 'package:flutter/material.dart';
+    import 'package:inventory_list/screens/menu.dart';
+    import 'package:inventory_list/screens/shoplist_form.dart';
+
+    class LeftDrawer extends StatelessWidget {
+    const LeftDrawer({super.key});
+
+    @override
+    Widget build(BuildContext context) {
+        return Drawer(
+        child: ListView(
+            children: [
+            const DrawerHeader(
+                decoration: BoxDecoration(
+                color: Colors.indigo,
+                ),
+                child: Column(
+                children: [
+                    Text(
+                    'Inventory List',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                    ),
+                    ),
+                    Padding(padding: EdgeInsets.all(10)),
+                    Text("Write all your shopping needs here!",
+                        // Adding text style with center alignment, font size 15, white color, and regular weight
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w100,
+                    ),
+                    textAlign: TextAlign.center,
+                    ),
+                ],
+                ),
+            ),
+            ListTile(
+                leading: const Icon(Icons.home_outlined),
+                title: const Text('Home Page'),
+                // Redirection to MyHomePage
+                onTap: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyHomePage(),
+                    ));
+                },
+            ),
+            ListTile(
+                leading: const Icon(Icons.add_shopping_cart),
+                title: const Text('Add Item'),
+                // Redirection to ShopFormPage
+                onTap: () {
+                // Routing to ShopFormPage here, after ShopFormPage has been created.
+                Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => const ShopFormPage())
+                );
+                },
+            ),
+            ],
+        ),
+        );
+    }
+    }
+
+    ```
+
+    shop_card.dart
+
+    ```
+    import 'package:flutter/material.dart';
+    import 'package:inventory_list/screens/shoplist_form.dart';
+
+    // Updated ShopItem class with color attribute
+    class ShopItem {
+    final String name;
+    final IconData icon;
+    final Color color; // New color attribute
+
+    ShopItem(this.name, this.icon, this.color); // Constructor includes color
+    }
+
+    // ShopCard widget to display each item as a card
+    class ShopCard extends StatelessWidget {
+    final ShopItem item;
+
+    const ShopCard(this.item, {super.key}); // Constructor
+
+    @override
+    Widget build(BuildContext context) {
+        return Material(
+        color: item.color, // Use color from the item
+        child: InkWell(
+            onTap: () {
+            ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                    content: Text("You pressed the ${item.name} button!")));
+
+            if (item.name == "Add Item") {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ShopFormPage(),
+                ),
+                );
+            }
+            },
+            child: Container(
+            padding: const EdgeInsets.all(8),
+            child: Center(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                    Icon(
+                    item.icon,
+                    color: Colors.white,
+                    size: 30.0,
+                    ),
+                    const Padding(padding: EdgeInsets.all(3)),
+                    Text(
+                    item.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white),
+                    ),
+                ],
+                ),
+            ),
+            ),
+        ),
+        );
+    }
+    }
+
+    // Main widget or any other part of your application where you use the ShopCard
+    class YourMainWidget extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+        // List of ShopItem objects with different colors
+        final List<ShopItem> items = [
+        ShopItem("View Items", Icons.checklist, Colors.green),
+        ShopItem("Add Item", Icons.add_shopping_cart, Colors.blue),
+        ShopItem("Logout", Icons.logout, Colors.red),
+        ];
+
+        return Scaffold(
+        appBar: AppBar(
+            title: Text("Inventory List"),
+        ),
+        body: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+            return ShopCard(items[index]);
+            },
+        ),
+        );
+    }
+    }
+
+
+    ```
+
+</details>
+
+---
